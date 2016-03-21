@@ -2,19 +2,26 @@ package com.prometeus.glubchenko.quickSort;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
  * Created by gleb on 1/2/2016.
  */
-public class FilmsDataBase {
+public class is41_lubchenko_02 {
 
     private int[][] dataBase;
     private int[] inversionsMatrix;
     private int amountOfUsers, amountOfFilms, checkedUser;
 
 
-    public FilmsDataBase(String pathTiInputFile){
+    public static void main(String[] args) throws IOException {
+        is41_lubchenko_02 base = new is41_lubchenko_02(args[0]);
+        base.sortInversionsAndWriteToFile();
+    }
+
+    public is41_lubchenko_02(String pathTiInputFile){
         try {
             Scanner scanner = new Scanner(new File(pathTiInputFile));
             checkedUser = Integer.parseInt(pathTiInputFile.replaceAll("\\D+",""));
@@ -75,7 +82,6 @@ public class FilmsDataBase {
     public int mergeSort(int []A, int left, int right){
         if(left >= right)
             return 0;
-
         int middle = (left + right) / 2;
         return mergeSort(A, left, middle) + mergeSort(A, middle + 1, right) + merge(A, left, middle, right);
     }
@@ -88,42 +94,22 @@ public class FilmsDataBase {
 
         mergeSort(inversionsMatrix, 0, amountOfUsers - 1);
 
+        try{
+            PrintWriter writer = new PrintWriter(new File("is41_lubchenko_02_output.txt"), "UTF-8");
+            writer.println(checkedUser);
 
-        for (int i = 0; i < amountOfUsers; i++)
-            for (int j = 0; j < tempInversionsMatrix.size(); j++) {
-                if (inversionsMatrix[i] == tempInversionsMatrix.get(j)[1] && inversionsMatrix[i] != 0) {
-                    System.out.println((tempInversionsMatrix.get(j)[0]+1)  + " " + inversionsMatrix[i]);
-                    tempInversionsMatrix.remove(j);
-                    break;
+            for (int i = 0; i < amountOfUsers; i++)
+                for (int j = 0; j < tempInversionsMatrix.size(); j++) {
+                    if (inversionsMatrix[i] == tempInversionsMatrix.get(j)[1] && inversionsMatrix[i] != 0) {
+                        writer.println((tempInversionsMatrix.get(j)[0]+1)  + " " + inversionsMatrix[i]);
+                        tempInversionsMatrix.remove(j);
+                        break;
+                    }
                 }
-            }
-
-        System.out.println();
-    }
-
-//        try{
-//            for (int i = 1; i <= treeMap.size(); i++) {
-//                System.out.println(treeMap.get(i));
-//
-//                /*PrintWriter writer = new PrintWriter(new File("is41_lubchenko_02_output.txt"), "UTF-8");
-//                writer.println(checkedUser);
-//                writer.println(i + 1 + " " + counter);
-//                writer.close();
-//                System.out.println();*/
-//            }
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//            System.err.println("problems with ");
-//        }
-//    }
-
-    public void printDataBase(){
-        for (int i = 0; i < amountOfUsers; i++) {
-            for (int j = 0; j < amountOfFilms; j++) {
-                System.out.print(dataBase[i][j] + " ");
-            }
-            System.out.println();
+            writer.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("problems with output file");
         }
-        System.out.println();
     }
 }
